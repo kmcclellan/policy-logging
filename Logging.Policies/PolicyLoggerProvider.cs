@@ -1,5 +1,7 @@
 namespace Microsoft.Extensions.Logging.Policies;
 
+using Microsoft.Extensions.Options;
+
 using System.Collections.Concurrent;
 
 /// <summary>
@@ -10,8 +12,30 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
 {
     readonly ConcurrentDictionary<string, PolicyLogger<TEntry>> loggers = new();
     readonly ScopeStack<TEntry> scopes = new();
+    readonly IDisposable? reload;
 
     PolicyLoggingOptions<TEntry>? options;
+
+    /// <summary>
+    /// Initializes the provider.
+    /// </summary>
+    protected PolicyLoggerProvider()
+    {
+    }
+
+    internal PolicyLoggerProvider(IOptionsMonitor<PolicyLoggingOptions<TEntry>> options, string providerName)
+    {
+        this.reload = options.OnChange(
+            (opts, name) =>
+            {
+                if (name == providerName)
+                {
+                    this.SetOptions(opts);
+                }
+            });
+
+        this.SetOptions(options.Get(providerName));
+    }
 
     /// <inheritdoc/>
     public ILogger CreateLogger(string categoryName)
@@ -61,5 +85,9 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
     /// </param>
     protected virtual void Dispose(bool disposing)
     {
+        if (disposing)
+        {
+            this.reload?.Dispose();
+        }
     }
 }
