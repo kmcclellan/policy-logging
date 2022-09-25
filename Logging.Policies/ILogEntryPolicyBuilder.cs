@@ -38,15 +38,7 @@ public interface ILogEntryPolicyBuilder<out TEntry>
     /// <summary>
     /// Configures log entry filtering.
     /// </summary>
-    /// <param name="category">The log category filter. Supports prefix or wildcard (<c>*</c>) matching.</param>
-    /// <param name="level">The minimum log level.</param>
-    /// <param name="eventId">A specific value for <see cref="EventId.Id"/>, or <see langword="null"/> for all.</param>
-    /// <param name="eventName">A specific value for <see cref="EventId.Name"/>, or <see langword="null"/> for all.</param>
+    /// <param name="policy">The log filter policy.</param>
     /// <returns>A builder of policies to apply to matching entries.</returns>
-    ILogEntryPolicyBuilder<TEntry> Filter(
-        string category = "*",
-        LogLevel level = LogLevel.Trace,
-        int? eventId = null,
-        string? eventName = null);
+    ILogEntryPolicyBuilder<TEntry> Filter(LogFilterPolicy policy);
 }
-
