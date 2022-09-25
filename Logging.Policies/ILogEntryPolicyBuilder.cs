@@ -28,11 +28,12 @@ public interface ILogEntryPolicyBuilder<out TEntry>
     ILogEntryPolicyBuilder<TEntry> OnException(Action<TEntry, Exception> format);
 
     /// <summary>
-    /// Configures log entry formatting using a log property.
+    /// Configures log entry formatting using log/scope state of a given type.
     /// </summary>
+    /// <typeparam name="T">The type of state.</typeparam>
     /// <param name="format">The format action.</param>
     /// <returns>The same policy builder instance, for chaining.</returns>
-    ILogEntryPolicyBuilder<TEntry> OnProperty(Action<TEntry, string, object?> format);
+    ILogEntryPolicyBuilder<TEntry> OnState<T>(Action<TEntry, T> format);
 
     /// <summary>
     /// Configures log entry filtering.
