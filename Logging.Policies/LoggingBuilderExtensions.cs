@@ -28,4 +28,14 @@ public static class LoggingBuilderExtensions
     {
         throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Adds JSON file logging to the services.
+    /// </summary>
+    /// <typeparam name="TEntry">The log entry type.</typeparam>
+    /// <returns>A builder for log entry policies.</returns>
+    public static ILogEntryPolicyBuilder<TEntry> AddJsonFile<TEntry>(this ILoggingBuilder builder)
+    {
+        throw new NotImplementedException();
+    }
 }
