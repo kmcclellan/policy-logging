@@ -16,4 +16,16 @@ public static class LoggingBuilderExtensions
     {
         throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Adds file logging to the services using a custom <see cref="ISerializationPolicy{TEntry}"/>.
+    /// </summary>
+    /// <typeparam name="TEntry">The log entry type.</typeparam>
+    /// <typeparam name="TPolicy">The serialization policy type.</typeparam>
+    /// <returns>A builder for log entry policies.</returns>
+    public static ILogEntryPolicyBuilder<TEntry> AddFile<TEntry, TPolicy>(this ILoggingBuilder builder)
+        where TPolicy : ISerializationPolicy<TEntry>
+    {
+        throw new NotImplementedException();
+    }
 }
