@@ -1,9 +1,9 @@
 namespace Microsoft.Extensions.Logging.Policies;
 
 /// <summary>
-/// A policy for filtering log entries.
+/// A filter for log entries.
 /// </summary>
-public class LogFilterPolicy
+public class LogEntryFilter
 {
     /// <summary>
     /// Gets or sets the log category filter.
@@ -12,11 +12,6 @@ public class LogFilterPolicy
     /// Supports prefix or wildcard (<c>*</c>) matching.
     /// </remarks>
     public string? Category { get; set; }
-
-    /// <summary>
-    /// Gets or sets the minimum log level.
-    /// </summary>
-    public LogLevel LogLevel { get; set; }
 
     /// <summary>
     /// Gets or sets a specific value for <see cref="EventId.Id"/>, or zero for all.
