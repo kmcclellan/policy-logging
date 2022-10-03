@@ -19,6 +19,7 @@ class PolicyLoggerProvider<TEntry, TState> : ILoggerProvider
     readonly IOptionsMonitor<PolicyLoggerOptions<TEntry, TState>> options;
     readonly string providerName;
     readonly ConcurrentDictionary<string, PolicyLogger<TEntry, TState>> loggers = new();
+    readonly AsyncLocal<Stack<TState>> scopes = new();
     readonly IDisposable reload;
 
     public PolicyLoggerProvider(IOptionsMonitor<PolicyLoggerOptions<TEntry, TState>> options, string providerName)
@@ -41,7 +42,10 @@ class PolicyLoggerProvider<TEntry, TState> : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        return new PolicyLogger<TEntry, TState>(categoryName, this.options.Get(this.providerName));
+        return this.loggers.GetOrAdd(
+            categoryName,
+            (s, p) => new PolicyLogger<TEntry, TState>(p.scopes, s, p.options.Get(p.providerName)),
+            this);
     }
 
     public void Dispose()

@@ -2,10 +2,12 @@ namespace Microsoft.Extensions.Logging.Policies;
 
 class PolicyLogger<TEntry, TState> : ILogger
 {
+    readonly AsyncLocal<Stack<TState>> scopes;
     readonly string category;
 
-    public PolicyLogger(string category, PolicyLoggerOptions<TEntry, TState> options)
+    public PolicyLogger(AsyncLocal<Stack<TState>> scopes, string category, PolicyLoggerOptions<TEntry, TState> options)
     {
+        this.scopes = scopes;
         this.category = category;
         this.SetOptions(options);
     }
