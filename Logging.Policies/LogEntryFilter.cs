@@ -22,9 +22,4 @@ public class LogEntryFilter
     /// Gets or sets a specific value for <see cref="EventId.Name"/>, or <see langword="null"/> for all.
     /// </summary>
     public string? EventName { get; set; }
-
-    /// <summary>
-    /// Gets or sets whether to include log scope information.
-    /// </summary>
-    public bool IncludeScopes { get; set; }
 }

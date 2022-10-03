@@ -10,5 +10,7 @@ class LogEntryActions<TEntry, TState>
 
     public Action<TEntry, TState>? OnState { get; set; }
 
+    public ILogScopePolicy<TEntry, TState>? OnScope { get; set; }
+
     public LogEntryFilter? Filter { get; set; }
 }
