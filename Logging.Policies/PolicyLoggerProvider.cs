@@ -19,7 +19,7 @@ class PolicyLoggerProvider<TEntry, TState> : ILoggerProvider
     readonly IOptionsMonitor<PolicyLoggerOptions<TEntry, TState>> options;
     readonly string providerName;
     readonly ConcurrentDictionary<string, PolicyLogger<TEntry, TState>> loggers = new();
-    readonly AsyncLocal<Stack<TState>> scopes = new();
+    readonly ScopeStack<TState> scopes = new();
     readonly IDisposable reload;
 
     public PolicyLoggerProvider(IOptionsMonitor<PolicyLoggerOptions<TEntry, TState>> options, string providerName)
