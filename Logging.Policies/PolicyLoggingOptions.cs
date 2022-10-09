@@ -1,9 +1,9 @@
 namespace Microsoft.Extensions.Logging.Policies;
 
 /// <summary>
-/// Options for writing log entries of a given type using logging policies.
+/// Options for logging using logging policies.
 /// </summary>
-/// <typeparam name="TEntry">The log entry type.</typeparam>
+/// <typeparam name="TEntry">The policy log entry type.</typeparam>
 public class PolicyLoggingOptions<TEntry>
 {
     /// <summary>
@@ -19,5 +19,5 @@ public class PolicyLoggingOptions<TEntry>
     /// <summary>
     /// Gets the logging policy collection.
     /// </summary>
-    public ICollection<LoggingPolicy<TEntry>> Policies { get; } = new List<LoggingPolicy<TEntry>>();
+    public ICollection<LoggingPolicy<TEntry>> Policies { get; } = new HashSet<LoggingPolicy<TEntry>>();
 }
