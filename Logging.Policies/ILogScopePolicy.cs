@@ -7,16 +7,8 @@ namespace Microsoft.Extensions.Logging.Policies;
 public interface ILogScopePolicy<in TEntry>
 {
     /// <summary>
-    /// Creates a new scope policy including the typed state.
+    /// Creates a new scope.
     /// </summary>
-    /// <typeparam name="TState">The scope state type.</typeparam>
-    /// <param name="state">The scope state.</param>
-    /// <returns>The new scope policy, or <see langword="null"/> if unchanged.</returns>
-    ILogScopePolicy<TEntry>? Include<TState>(TState state);
-
-    /// <summary>
-    /// Captures the scope.
-    /// </summary>
-    /// <param name="entry">The target log entry.</param>
-    void OnEntry(TEntry entry);
+    /// <returns>The log scope.</returns>
+    ILogScope<TEntry> Create();
 }
