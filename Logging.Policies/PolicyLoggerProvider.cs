@@ -33,8 +33,10 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
     }
 
     /// <inheritdoc/>
-    public virtual void Dispose()
+    public void Dispose()
     {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -49,5 +51,15 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
         {
             logger.SetOptions(options);
         }
+    }
+
+    /// <summary>
+    /// Disposes and/or finalizes the instance.
+    /// </summary>
+    /// <param name="disposing">
+    /// <see langword="true"/> to dispose and finalize, <see langword="false"/> to finalize only.
+    /// </param>
+    protected virtual void Dispose(bool disposing)
+    {
     }
 }
