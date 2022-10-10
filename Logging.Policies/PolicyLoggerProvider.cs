@@ -45,7 +45,7 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
     /// <param name="options">The logging options.</param>
     protected void SetOptions(PolicyLoggingOptions<TEntry> options)
     {
-        this.options = options;
+        this.options = options ?? throw new ArgumentNullException(nameof(options));
 
         foreach (var logger in this.loggers.Values)
         {
