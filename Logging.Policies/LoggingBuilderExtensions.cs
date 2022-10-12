@@ -8,12 +8,13 @@ public static class LoggingBuilderExtensions
     /// <summary>
     /// Adds a policy logger provider to the services.
     /// </summary>
+    /// <typeparam name="TEntry">The log entry type for policies.</typeparam>
     /// <param name="builder">The logging builder.</param>
     /// <param name="providerName">The provider name, for log level filtering.</param>
     /// <returns>A builder for the logging policy.</returns>
-    public static LoggingPolicyBuilder AddPolicyProvider(this ILoggingBuilder builder, string providerName = "Policies")
+    public static LoggingPolicyBuilder<TEntry> AddPolicyProvider<TEntry>(this ILoggingBuilder builder, string providerName = "Policies")
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        return new LoggingPolicyBuilder(builder.Services, providerName);
+        return new(builder.Services, providerName);
     }
 }

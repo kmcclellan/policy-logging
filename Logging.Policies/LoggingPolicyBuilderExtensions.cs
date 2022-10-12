@@ -3,40 +3,10 @@ namespace Microsoft.Extensions.Logging.Policies;
 using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
-/// Extensions of <see cref="LoggingPolicyBuilder"/>.
+/// Extensions of <see cref="LoggingPolicyBuilder{TEntry}"/>.
 /// </summary>
 public static class LoggingPolicyBuilderExtensions
 {
-    /// <summary>
-    /// Configures logging using the given entry type.
-    /// </summary>
-    /// <typeparam name="TEntry">The log entry type.</typeparam>
-    /// <param name="builder">The target builder.</param>
-    /// <param name="begin">The delegate to begin writing a log entry.</param>
-    /// <param name="finish">A delegate to finish writing a log entry (optional).</param>
-    /// <returns>A builder for the entry type.</returns>
-    public static LoggingPolicyBuilder<TEntry> WithEntries<TEntry>(
-        this LoggingPolicyBuilder builder,
-        Func<TEntry> begin,
-        Action<TEntry>? finish = null)
-    {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        ArgumentNullException.ThrowIfNull(begin, nameof(begin));
-
-        builder.Services.AddSingleton<ILoggerProvider>(
-            sp => ActivatorUtilities.CreateInstance<PolicyLoggerProvider<TEntry>>(sp, builder.ProviderName));
-
-        builder.Services.Configure<PolicyLoggingOptions<TEntry>>(
-            builder.ProviderName,
-            opts =>
-            {
-                opts.Begin = begin;
-                opts.Finish = finish;
-            });
-
-        return new(builder.Services, builder.ProviderName) { Filter = builder.Filter };
-    }
-
     /// <summary>
     /// Configures logging using the given policy.
     /// </summary>
