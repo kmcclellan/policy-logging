@@ -8,23 +8,54 @@ using Microsoft.Extensions.DependencyInjection;
 public static class LoggingPolicyBuilderExtensions
 {
     /// <summary>
-    /// Configures logging using the given policy.
+    /// Configures an <see cref="ILogFieldPolicy{TEntry}"/> using the given action.
     /// </summary>
     /// <typeparam name="TEntry">The log entry type.</typeparam>
     /// <param name="builder">The target builder.</param>
-    /// <param name="policy">The logging policy.</param>
+    /// <param name="action">The log field action.</param>
     /// <returns>The same builder instance, for chaining.</returns>
-    public static LoggingPolicyBuilder<TEntry> WithPolicy<TEntry>(
+    public static LoggingPolicyBuilder<TEntry> WithFields<TEntry>(
         this LoggingPolicyBuilder<TEntry> builder,
-        LoggingPolicy<TEntry> policy)
+        Action<TEntry, string, LogLevel, EventId> action)
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        ArgumentNullException.ThrowIfNull(policy, nameof(policy));
+        ArgumentNullException.ThrowIfNull(action, nameof(action));
 
-        policy.Filter ??= builder.Filter;
-        builder.Services.Configure<PolicyLoggingOptions<TEntry>>(builder.ProviderName, x => x.Policies.Add(policy));
+        return WithPolicy(builder, new() { Fields = new LogFieldPolicy<TEntry>(action) });
+    }
 
-        return builder;
+    /// <summary>
+    /// Configures an <see cref="ILogMessagePolicy{TEntry}"/> using the given action.
+    /// </summary>
+    /// <typeparam name="TEntry">The log entry type.</typeparam>
+    /// <param name="builder">The target builder.</param>
+    /// <param name="action">The message action.</param>
+    /// <returns>The same builder instance, for chaining.</returns>
+    public static LoggingPolicyBuilder<TEntry> WithMessages<TEntry>(
+        this LoggingPolicyBuilder<TEntry> builder,
+        Action<TEntry, string> action)
+    {
+        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ArgumentNullException.ThrowIfNull(action, nameof(action));
+
+        return WithPolicy(builder, new() { Messages = new LogMessagePolicy<TEntry>(action) });
+    }
+
+    /// <summary>
+    /// Configures an <see cref="ILogExceptionPolicy{TEntry}"/> using the given action.
+    /// </summary>
+    /// <typeparam name="TEntry">The log entry type.</typeparam>
+    /// <param name="builder">The target builder.</param>
+    /// <param name="action">The exception action.</param>
+    /// <returns>The same builder instance, for chaining.</returns>
+    public static LoggingPolicyBuilder<TEntry> WithExceptions<TEntry>(
+        this LoggingPolicyBuilder<TEntry> builder,
+        Action<TEntry, Exception> action)
+    {
+        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ArgumentNullException.ThrowIfNull(action, nameof(action));
+
+        return WithPolicy(builder, new() { Exceptions = new LogExceptionPolicy<TEntry>(action) });
     }
 
     /// <summary>
@@ -48,4 +79,15 @@ public static class LoggingPolicyBuilderExtensions
         var policy = new LogPropertyPolicy<TEntry>(action);
         return WithPolicy(builder, new() { State = policy, Scopes = includeScopes ? policy : null });
     }
+
+    static LoggingPolicyBuilder<TEntry> WithPolicy<TEntry>(
+        LoggingPolicyBuilder<TEntry> builder,
+        LoggingPolicy<TEntry> policy)
+    {
+        policy.Filter ??= builder.Filter;
+        builder.Services.Configure<PolicyLoggingOptions<TEntry>>(builder.ProviderName, x => x.Policies.Add(policy));
+
+        return builder;
+    }
+
 }
