@@ -12,7 +12,9 @@ public static class LoggingBuilderExtensions
     /// <param name="builder">The logging builder.</param>
     /// <param name="providerName">The provider name, for log level filtering.</param>
     /// <returns>A builder for the logging policy.</returns>
-    public static LoggingPolicyBuilder<TEntry> AddPolicyProvider<TEntry>(this ILoggingBuilder builder, string providerName = "Policies")
+    public static LoggingPolicyBuilder<TEntry> AddPolicyProvider<TEntry>(
+        this ILoggingBuilder builder,
+        string providerName = "Policies")
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
         return new(builder.Services, providerName);
