@@ -1,5 +1,7 @@
 namespace Microsoft.Extensions.Logging.Policies;
 
+using Microsoft.Extensions.Logging.Policies.Core;
+
 class ScopeStack<TEntry>
 {
     readonly AsyncLocal<Dictionary<ILogScopePolicy<TEntry>, Stack<ILogScope<TEntry>>>> stacks = new();

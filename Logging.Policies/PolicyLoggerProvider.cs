@@ -1,5 +1,7 @@
 namespace Microsoft.Extensions.Logging.Policies;
 
+using Microsoft.Extensions.Logging.Policies.Core;
+
 using System.Collections.Concurrent;
 
 /// <summary>

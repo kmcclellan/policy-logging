@@ -1,4 +1,4 @@
-namespace Microsoft.Extensions.Logging.Policies;
+namespace Microsoft.Extensions.Logging.Policies.Core;
 
 /// <summary>
 /// A filter for log entries.

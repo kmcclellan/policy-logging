@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Extensions.Logging.Policies;
+﻿namespace Microsoft.Extensions.Logging.Policies.Core;
 
 /// <summary>
 /// A mutable scope to capture ambient log information using entries of a given type.

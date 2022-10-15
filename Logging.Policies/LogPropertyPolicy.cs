@@ -1,5 +1,7 @@
 namespace Microsoft.Extensions.Logging.Policies;
 
+using Microsoft.Extensions.Logging.Policies.Core;
+
 /// <summary>
 /// A base policy for capturing named log properties (i.e. message template arguments).
 /// </summary>

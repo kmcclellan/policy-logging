@@ -1,4 +1,4 @@
-namespace Microsoft.Extensions.Logging.Policies;
+namespace Microsoft.Extensions.Logging.Policies.Core;
 
 /// <summary>
 /// A policy for capturing logged exceptions using entries of a given type.
