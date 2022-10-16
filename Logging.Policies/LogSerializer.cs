@@ -16,8 +16,18 @@ public abstract class LogSerializer<TEntry> : IAsyncDisposable
     /// </summary>
     public LogSerializer()
     {
-        this.task = this.Flush();
+        this.task = this.Run();
     }
+
+    /// <summary>
+    /// Gets or sets the number of bytes to be buffered before triggering a flush.
+    /// </summary>
+    protected abstract int BufferBytes { get; }
+
+    /// <summary>
+    /// Gets or sets the time interval to be buffered before triggering a flush.
+    /// </summary>
+    protected abstract TimeSpan BufferInterval { get; }
 
     /// <summary>
     /// Serializes a log entry.
@@ -41,11 +51,16 @@ public abstract class LogSerializer<TEntry> : IAsyncDisposable
     }
 
     /// <summary>
-    /// Gets the serializer options.
+    /// Writes an entry a buffer, returning the number of bytes written.
     /// </summary>
-    protected abstract LogSerializerOptions<TEntry> Options { get; }
+    protected abstract int Write(TEntry entry);
 
-    async Task Flush()
+    /// <summary>
+    /// Asynchronously flushes the buffered log data.
+    /// </summary>
+    protected abstract Task FlushAsync(CancellationToken cancellationToken);
+
+    async Task Run()
     {
         try
         {
@@ -61,10 +76,10 @@ public abstract class LogSerializer<TEntry> : IAsyncDisposable
 
                     if (buffer.TryReceive(out var entry))
                     {
-                        writtenBytes += this.Options.Write?.Invoke(entry) ?? 0;
+                        writtenBytes += this.Write(entry);
                     }
-                    else if (writtenBytes < this.Options.BufferBytes &&
-                        (delay = DateTime.UtcNow - timestamp + this.Options.BufferInterval) > TimeSpan.Zero)
+                    else if (writtenBytes < this.BufferBytes &&
+                        (delay = DateTime.UtcNow - timestamp + this.BufferInterval) > TimeSpan.Zero)
                     {
                         try
                         {
@@ -76,11 +91,7 @@ public abstract class LogSerializer<TEntry> : IAsyncDisposable
                     }
                     else
                     {
-                        if (this.Options.Flush is { } flush)
-                        {
-                            await flush(CancellationToken.None).ConfigureAwait(false);
-                        }
-
+                        await this.FlushAsync(CancellationToken.None).ConfigureAwait(false);
                         writtenBytes = 0;
                     }
                 }
