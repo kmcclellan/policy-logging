@@ -42,12 +42,10 @@ public abstract class LogSerializer<TEntry> : IAsyncDisposable
     }
 
     /// <inheritdoc/>
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        this.buffer.Complete();
-
-        await this.buffer.Completion.ConfigureAwait(false);
-        await this.task.ConfigureAwait(false);
+        GC.SuppressFinalize(this);
+        return this.DisposeAsync(disposing: true);
     }
 
     /// <summary>
@@ -59,6 +57,24 @@ public abstract class LogSerializer<TEntry> : IAsyncDisposable
     /// Asynchronously flushes the buffered log data.
     /// </summary>
     protected abstract Task FlushAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Disposes and/or finalizes the instance asynchronously.
+    /// </summary>
+    /// <param name="disposing">
+    /// <see langword="true"/> to dispose and finalize, <see langword="false"/> to finalize only.
+    /// </param>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    protected async ValueTask DisposeAsync(bool disposing)
+    {
+        if (disposing)
+        {
+            this.buffer.Complete();
+
+            await this.buffer.Completion.ConfigureAwait(false);
+            await this.task.ConfigureAwait(false);
+        }
+    }
 
     async Task Run()
     {
