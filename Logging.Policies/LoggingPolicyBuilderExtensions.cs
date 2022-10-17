@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Policies.Core;
 
 /// <summary>
-/// Extensions of <see cref="LoggingPolicyBuilder{TEntry}"/>.
+/// Extensions of <see cref="LoggingPolicyBuilder"/> and <see cref="LoggingPolicyBuilder{TEntry}"/>.
 /// </summary>
 public static class LoggingPolicyBuilderExtensions
 {
