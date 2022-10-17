@@ -44,7 +44,7 @@ public class LoggingPolicyBuilder
         return new(this.Services, null);
     }
 
-    [ProviderAlias("Policies")]
+    [ProviderAlias("Policy")]
     class DefaultPolicyLoggerProvider<TEntry> : PolicyLoggerProvider<TEntry>
     {
         readonly IDisposable reload;
