@@ -20,7 +20,17 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
     {
         return this.loggers.GetOrAdd(
             categoryName,
-            (cat, prov) => new PolicyLogger(prov, cat),
+            (cat, prov) =>
+            {
+                var logger = new PolicyLogger(prov, cat);
+
+                if (prov.policies is { } pols)
+                {
+                    logger.SetPolicies(pols);
+                }
+
+                return logger;
+            },
             this);
     }
 
