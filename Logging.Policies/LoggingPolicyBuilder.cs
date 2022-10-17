@@ -25,10 +25,22 @@ public class LoggingPolicyBuilder
     /// Configures using policies with the given log entry type.
     /// </summary>
     /// <typeparam name="TEntry">The log entry type.</typeparam>
+    /// <param name="begin">The delegate to begin writing a log entry.</param>
+    /// <param name="finish">A delegate to finish writing a log entry.</param>
     /// <returns>A typed logging policy builder.</returns>
-    public LoggingPolicyBuilder<TEntry> WithEntries<TEntry>()
+    public LoggingPolicyBuilder<TEntry> WithEntries<TEntry>(Func<TEntry> begin, Action<TEntry>? finish = null)
     {
+        ArgumentNullException.ThrowIfNull(begin, nameof(begin));
+
+        this.Services.Configure<PolicyLoggingOptions<TEntry>>(
+            opts =>
+            {
+                opts.Begin = begin;
+                opts.Finish = finish;
+            });
+
         this.Services.AddSingleton<ILoggerProvider, DefaultPolicyLoggerProvider<TEntry>>();
+
         return new(this.Services, null);
     }
 
