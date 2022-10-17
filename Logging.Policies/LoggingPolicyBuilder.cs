@@ -101,13 +101,17 @@ public class LoggingPolicyBuilder<TEntry>
     public LogEntryFilter? Filter { get; }
 
     /// <summary>
-    /// Configures logging using the given filter.
+    /// Configures policies using a log entry filter.
     /// </summary>
     /// <param name="filter">The log entry filter.</param>
-    /// <returns>A builder using the filter.</returns>
-    public LoggingPolicyBuilder<TEntry> WithFilter(LogEntryFilter filter)
+    /// <param name="build">The delegate to build filtered policies.</param>
+    /// <returns>The same builder instance, for chaining.</returns>
+    public LoggingPolicyBuilder<TEntry> WithFilter(LogEntryFilter filter, Action<LoggingPolicyBuilder<TEntry>> build)
     {
         ArgumentNullException.ThrowIfNull(filter, nameof(filter));
-        return new(this.Services, filter);
+        ArgumentNullException.ThrowIfNull(build, nameof(build));
+
+        build(new(this.Services, filter));
+        return this;
     }
 }
