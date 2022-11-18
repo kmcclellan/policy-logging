@@ -45,13 +45,13 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
     /// Begins writing a log entry.
     /// </summary>
     /// <returns>The log entry.</returns>
-    protected abstract TEntry Begin();
+    protected abstract ref TEntry Begin();
 
     /// <summary>
     /// Finishes writing a log entry.
     /// </summary>
     /// <param name="entry">The log entry.</param>
-    protected virtual void Finish(TEntry entry)
+    protected virtual void Finish(ref TEntry entry)
     {
     }
 
@@ -173,7 +173,8 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
             return this.policies != null;
         }
 
-        public IDisposable BeginScope<TState>(TState state)
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull
         {
             if (this.policies != null)
             {
@@ -200,7 +201,7 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
                 }
             }
 
-            return MergedScope.Null;
+            return null;
         }
 
         public void Log<TState>(
@@ -242,7 +243,7 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
 
                 if (entry != null)
                 {
-                    this.provider.Finish(entry);
+                    this.provider.Finish(ref entry);
                 }
             }
         }
