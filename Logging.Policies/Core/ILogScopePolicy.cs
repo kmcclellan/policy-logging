@@ -4,7 +4,7 @@ namespace Microsoft.Extensions.Logging.Policies.Core;
 /// A policy for capturing log scopes using entries of a given type.
 /// </summary>
 /// <typeparam name="TEntry">The log entry type.</typeparam>
-public interface ILogScopePolicy<in TEntry>
+public interface ILogScopePolicy<TEntry>
 {
     /// <summary>
     /// Creates a new scope.

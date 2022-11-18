@@ -1,9 +1,9 @@
-﻿namespace Microsoft.Extensions.Logging.Policies.Core;
+namespace Microsoft.Extensions.Logging.Policies.Core;
 
 /// <summary>
 /// A mutable scope to capture ambient log information using entries of a given type.
 /// </summary>
-public interface ILogScope<in TEntry>
+public interface ILogScope<TEntry>
 {
     /// <summary>
     /// Creates a new scope from the current scope, including the typed state.
@@ -17,5 +17,5 @@ public interface ILogScope<in TEntry>
     /// Captures the scope.
     /// </summary>
     /// <param name="entry">The target log entry.</param>
-    void OnEntry(TEntry entry);
+    void OnEntry(ref TEntry entry);
 }

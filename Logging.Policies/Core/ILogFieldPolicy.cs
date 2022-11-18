@@ -4,7 +4,7 @@ namespace Microsoft.Extensions.Logging.Policies.Core;
 /// A policy for capturing standard log fields using entries of a given type.
 /// </summary>
 /// <typeparam name="TEntry">The log entry type.</typeparam>
-public interface ILogFieldPolicy<in TEntry>
+public interface ILogFieldPolicy<TEntry>
 {
     /// <summary>
     /// Captures standard log fields.
@@ -13,5 +13,5 @@ public interface ILogFieldPolicy<in TEntry>
     /// <param name="category">The log category name.</param>
     /// <param name="level">The log level.</param>
     /// <param name="id">The log event ID.</param>
-    void OnEntry(TEntry entry, string category, LogLevel level, EventId id);
+    void OnEntry(ref TEntry entry, string category, LogLevel level, EventId id);
 }
