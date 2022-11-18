@@ -15,13 +15,13 @@ public abstract class LogPropertyPolicy<TEntry> : ILogScopePolicy<TEntry>, ILogS
     }
 
     /// <inheritdoc/>
-    public void OnEntry<TState>(TEntry entry, TState state)
+    public void OnEntry<TState>(ref TEntry entry, TState state)
     {
         if (state is IReadOnlyList<KeyValuePair<string, object?>> props)
         {
             for (var i = 0; i < props.Count; i++)
             {
-                this.OnProperty(entry, props[i].Key, props[i].Value);
+                this.OnProperty(ref entry, props[i].Key, props[i].Value);
             }
         }
     }
@@ -32,7 +32,7 @@ public abstract class LogPropertyPolicy<TEntry> : ILogScopePolicy<TEntry>, ILogS
     /// <param name="entry">The target log entry.</param>
     /// <param name="name">The property name.</param>
     /// <param name="value">The property value.</param>
-    protected abstract void OnProperty(TEntry entry, string name, object? value);
+    protected abstract void OnProperty(ref TEntry entry, string name, object? value);
 
     class PropertyScope : ILogScope<TEntry>
     {
@@ -63,11 +63,11 @@ public abstract class LogPropertyPolicy<TEntry> : ILogScopePolicy<TEntry>, ILogS
             return null;
         }
 
-        public void OnEntry(TEntry entry)
+        public void OnEntry(ref TEntry entry)
         {
             foreach (var (key, value) in this.properties)
             {
-                this.policy.OnProperty(entry, key, value);
+                this.policy.OnProperty(ref entry, key, value);
             }
         }
     }
