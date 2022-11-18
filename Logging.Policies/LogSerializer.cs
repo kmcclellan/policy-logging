@@ -33,7 +33,7 @@ public abstract class LogSerializer<TEntry> : LogTarget<TEntry>
 
                 if (source.TryReceive(out var entry))
                 {
-                    writtenBytes += this.Write(entry);
+                    writtenBytes += this.Write(ref entry);
                 }
                 else if (writtenBytes < this.BufferBytes &&
                     (delay = DateTime.UtcNow - timestamp + this.BufferInterval) > TimeSpan.Zero)
@@ -59,7 +59,7 @@ public abstract class LogSerializer<TEntry> : LogTarget<TEntry>
     /// <summary>
     /// Writes a log entry to the memory buffer, returning the number of bytes written.
     /// </summary>
-    protected abstract int Write(TEntry entry);
+    protected abstract int Write(ref TEntry entry);
 
     /// <summary>
     /// Asynchronously flushes the buffered log data.
