@@ -28,7 +28,7 @@ public abstract class LogTarget<TEntry> : IAsyncDisposable
     /// Queues a log entry to be processed by the target.
     /// </summary>
     /// <param name="entry">The log entry.</param>
-    public void Send(TEntry entry)
+    public void Send(in TEntry entry)
     {
         if (!this.buffer.Post(entry))
         {
