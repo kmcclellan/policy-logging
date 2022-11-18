@@ -271,23 +271,18 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
 
         class MergedScope : IDisposable
         {
-            public static MergedScope Null = new(null);
+            readonly List<IDisposable> scopes;
 
-            readonly List<IDisposable>? scopes;
-
-            public MergedScope(List<IDisposable>? scopes)
+            public MergedScope(List<IDisposable> scopes)
             {
                 this.scopes = scopes;
             }
 
             public void Dispose()
             {
-                if (this.scopes != null)
+                foreach (var scope in this.scopes)
                 {
-                    foreach (var scope in this.scopes)
-                    {
-                        scope.Dispose();
-                    }
+                    scope.Dispose();
                 }
             }
         }
