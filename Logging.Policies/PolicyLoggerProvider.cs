@@ -225,18 +225,18 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
 
                         if (policy.Scopes != null)
                         {
-                            this.provider.scopes.Peek(policy.Scopes)?.OnEntry(entry);
+                            this.provider.scopes.Peek(policy.Scopes)?.OnEntry(ref entry);
                         }
 
-                        policy.Fields?.OnEntry(entry, this.category, logLevel, eventId);
-                        policy.Messages?.OnEntry(entry, message ??= formatter(state, exception));
+                        policy.Fields?.OnEntry(ref entry, this.category, logLevel, eventId);
+                        policy.Messages?.OnEntry(ref entry, message ??= formatter(state, exception));
 
                         if (exception != null)
                         {
-                            policy.Exceptions?.OnEntry(entry, exception);
+                            policy.Exceptions?.OnEntry(ref entry, exception);
                         }
 
-                        policy.State?.OnEntry(entry, state);
+                        policy.State?.OnEntry(ref entry, state);
                     }
                 }
 
