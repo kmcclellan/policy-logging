@@ -1,14 +1,11 @@
 namespace Microsoft.Extensions.Logging.Policies;
 
-abstract class LogSerializer<TWriter, TEntry> : IAsyncDisposable
+abstract class LogSerializer<TEntry> : IAsyncDisposable
 {
-    readonly TWriter[] writers;
-    ValueTask flush;
+    readonly ILogBuffer<TEntry>?[] buffers = new ILogBuffer<TEntry>?[2];
 
-    public LogSerializer()
-    {
-        this.writers = new[] { this.GetWriter(), this.GetWriter() };
-    }
+    int index;
+    ValueTask flush;
 
     protected virtual int FlushBytes { get; } = 4096;
 
@@ -24,11 +21,7 @@ abstract class LogSerializer<TWriter, TEntry> : IAsyncDisposable
         return this.flush;
     }
 
-    protected abstract TWriter GetWriter();
+    protected abstract ILogBuffer<TEntry> GetBuffer();
 
-    protected abstract int Write(TWriter writer, ref TEntry entry);
-
-    protected abstract ref ReadOnlySpan<byte> GetPayload(TWriter writer);
-
-    protected abstract Task Flush(ReadOnlySpan<byte> payload, CancellationToken cancellationToken);
+    protected abstract Task Flush(in ReadOnlySpan<byte> payload, CancellationToken cancellationToken);
 }
