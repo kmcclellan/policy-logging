@@ -218,9 +218,8 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
 
                 foreach (var policy in this.policies)
                 {
-                    if (policy.Filter == null ||
-                        policy.Filter.EventId == eventId.Id ||
-                        policy.Filter.EventName == eventId.Name)
+                    if ((policy.Filter == null || policy.Filter.EventId == 0 || policy.Filter.EventId == eventId.Id) &&
+                        (policy.Filter?.EventName == null || policy.Filter.EventName == eventId.Name))
                     {
                         entry ??= this.provider.Begin();
 
