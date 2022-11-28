@@ -2,15 +2,15 @@ namespace Microsoft.Extensions.Logging.Policies.Serialization;
 
 using System.Buffers;
 
-abstract class FlushingSerializer<TEntry> : ILogSerializer<TEntry>, IAsyncDisposable
+abstract class BufferedLogSerializer<TEntry> : ILogSerializer<TEntry>, IAsyncDisposable
 {
     readonly object sync = new();
 
-    SerializerNode? writing, flushing;
+    BufferNode? writing, flushing;
     DateTime? start;
     Task flush = Task.CompletedTask;
 
-    protected virtual int FlushBytes { get; } = 4096;
+    protected virtual int BufferSize { get; } = 4096;
 
     protected virtual TimeSpan FlushInterval { get; } = TimeSpan.FromSeconds(1);
 
@@ -43,11 +43,11 @@ abstract class FlushingSerializer<TEntry> : ILogSerializer<TEntry>, IAsyncDispos
 
     protected abstract Task Flush(in ReadOnlySpan<byte> payload, CancellationToken cancellationToken);
 
-    bool TryRotate(SerializerNode node)
+    bool TryRotate(BufferNode node)
     {
         this.start ??= DateTime.UtcNow;
 
-        if (DateTime.UtcNow >= this.start + this.FlushInterval || node.Bytes.WrittenCount >= this.FlushBytes)
+        if (DateTime.UtcNow >= this.start + this.FlushInterval || node.Bytes.WrittenCount >= this.BufferSize)
         {
             this.writing = this.flushing;
             this.flushing = node;
@@ -58,7 +58,7 @@ abstract class FlushingSerializer<TEntry> : ILogSerializer<TEntry>, IAsyncDispos
         return false;
     }
 
-    async Task FlushLoop(SerializerNode node)
+    async Task FlushLoop(BufferNode node)
     {
         bool active;
 
@@ -75,9 +75,9 @@ abstract class FlushingSerializer<TEntry> : ILogSerializer<TEntry>, IAsyncDispos
         while (active);
     }
 
-    class SerializerNode
+    class BufferNode
     {
-        public SerializerNode(ArrayBufferWriter<byte> bytes, ILogSerializer<TEntry> entries)
+        public BufferNode(ArrayBufferWriter<byte> bytes, ILogSerializer<TEntry> entries)
         {
             this.Bytes = bytes;
             this.Entries = entries;
