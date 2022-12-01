@@ -8,7 +8,7 @@ interface ILogBuffer<TEntry>
 
     int WrittenCount { get; }
 
-    ReadOnlySpan<byte> WrittenSpan { get; }
+    ReadOnlyMemory<byte> WrittenMemory { get; }
 
     void Clear();
 }

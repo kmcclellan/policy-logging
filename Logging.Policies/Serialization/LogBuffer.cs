@@ -15,7 +15,7 @@ class LogBuffer<TEntry> : ILogBuffer<TEntry>
 
     public int WrittenCount => this.bytes.WrittenCount;
 
-    public ReadOnlySpan<byte> WrittenSpan => this.bytes.WrittenSpan;
+    public ReadOnlyMemory<byte> WrittenMemory => this.bytes.WrittenMemory;
 
     public static ILogBuffer<TEntry>.Factory GetFactory(IBufferSerializerFactory<TEntry> serializers)
     {

@@ -1,6 +1,6 @@
-﻿namespace Microsoft.Extensions.Logging.Policies.Serialization;
+namespace Microsoft.Extensions.Logging.Policies.Serialization;
 
 interface ILogOutput
 {
-    Task WriteAsync(ReadOnlySpan<byte> buffer, CancellationToken cancellationToken);
+    Task WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken);
 }

@@ -73,7 +73,7 @@ class BufferedSerializer<TEntry> : ILogSerializer<TEntry>, IAsyncDisposable
 
         do
         {
-            await this.output.WriteAsync(buffer.WrittenSpan, CancellationToken.None).ConfigureAwait(false);
+            await this.output.WriteAsync(buffer.WrittenMemory, CancellationToken.None).ConfigureAwait(false);
             buffer.Clear();
 
             lock (this.sync)
