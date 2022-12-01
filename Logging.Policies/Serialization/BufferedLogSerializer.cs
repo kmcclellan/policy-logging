@@ -41,7 +41,7 @@ abstract class BufferedLogSerializer<TEntry> : ILogSerializer<TEntry>, IAsyncDis
 
     protected abstract ILogSerializer<TEntry> Create(IBufferWriter<byte> buffer);
 
-    protected abstract Task Flush(in ReadOnlySpan<byte> payload, CancellationToken cancellationToken);
+    protected abstract Task Flush(ReadOnlySpan<byte> payload, CancellationToken cancellationToken);
 
     bool TryRotate(BufferNode node)
     {
