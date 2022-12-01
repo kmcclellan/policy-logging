@@ -1,6 +1,14 @@
 namespace Microsoft.Extensions.Logging.Policies.Serialization;
 
-interface ILogSerializer<TEntry>
+/// <summary>
+/// A serializer of typed log entries.
+/// </summary>
+/// <typeparam name="TEntry">The log entry type.</typeparam>
+public interface ILogSerializer<TEntry>
 {
-    void Write(ref TEntry entry);
+    /// <summary>
+    /// Serializes a log entry to underlying storage.
+    /// </summary>
+    /// <param name="entry">The log entry.</param>
+    void Serialize(ref TEntry entry);
 }
