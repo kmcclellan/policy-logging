@@ -42,10 +42,10 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
     }
 
     /// <summary>
-    /// Begins writing a log entry.
+    /// Initializes and begins writing a log entry.
     /// </summary>
-    /// <returns>The log entry.</returns>
-    protected abstract ref TEntry Begin();
+    /// <param name="entry">The log entry.</param>
+    protected abstract void Begin(out TEntry entry);
 
     /// <summary>
     /// Finishes writing a log entry.
@@ -221,7 +221,10 @@ public abstract class PolicyLoggerProvider<TEntry> : ILoggerProvider
                     if ((policy.Filter == null || policy.Filter.EventId == 0 || policy.Filter.EventId == eventId.Id) &&
                         (policy.Filter?.EventName == null || policy.Filter.EventName == eventId.Name))
                     {
-                        entry ??= this.provider.Begin();
+                        if (entry == null)
+                        {
+                            this.provider.Begin(out entry);
+                        }
 
                         if (policy.Scopes != null)
                         {
